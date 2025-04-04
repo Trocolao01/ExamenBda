@@ -1,0 +1,14 @@
+Evento: Stage west career decide early.
+Nombre del entrenador: Timothy Scott
+Equipo de Pokemon: Equipo1
+Resultado de la batalla: Perdio
+
+Evento: Election available kind.
+Nombre del entrenador: Karina Romero
+Equipo de Pokemon: Equipo2
+Resultado de la batalla: Gano
+
+Evento: Election available kind.
+Nombre del entrenador: Richard Bauer
+Equipo de Pokemon: Equipo3
+Resultado de la batalla: Perdio

@@ -1,0 +1,17 @@
+## MySQL
+NO USADO ///docker run --name guilleSQL -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_USER=root -e MYSQL_PASSWORD=my-secret-pw -e MYSQL_DATABASE=empresa -p 3307:3306 -v mysql_data:/var/lib/mysql -d mysql:latest
+docker run --name guilleSQL -v guilleSQL_prct:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -p 3306:3306 -d mysql:latest
+
+docker exec -it guilleSQL /bin/bash
+mysql -u root -p
+
+## Mongo
+NO USADO ///docker run -d --name guilleMongo -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=my-secret-pw -p 27018:27017 -v mongo_data:/data/db mongo:latest
+docker run -d --name mongo_guille -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=secret -v guilleMongo_prct:/data/db mongo:latest 
+docker exec -it mongo_guille /bin/bash
+mongosh -u admin -p secret
+
+
+## Neo4J
+NO USADO ///docker run -d --name mi_neo4j -e NEO4J_AUTH=mi_usuario/mi_contraseña -p 7475:7474 -p 7688:7687 -v neo4j_data:/data neo4j:latest
+docker run --name=guilleNeo --publish=7474:7474 --publish=7687:7687 -v=neo4jGuille/data --env NEO4J_AUTH=neo4j/my-secret-pw neo4j

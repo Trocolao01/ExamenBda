@@ -1,0 +1,16 @@
+# Compilar el código Java usando las bibliotecas de Hadoop
+javac -classpath $(hadoop classpath) -d . MedianCalculator.java
+
+# Crear un archivo JAR con los archivos compilados
+jar cf MedianCalculator.jar *.class
+
+# Ejecutar el programa en Hadoop
+# Argumentos:
+#  - MedianCalculator.jar: Archivo JAR que contiene la aplicación
+#  - MedianCalculator: Clase principal
+#  - /home/numeros.txt: Archivo de entrada en HDFS
+#  - /home/salida_mediana: Carpeta de salida en HDFS
+hadoop jar MedianCalculator.jar MedianCalculator /home/numeros.txt /home/salida_mediana
+
+# Mostrar el resultado almacenado en HDFS
+hdfs dfs -cat /home/salida_mediana/part-r-00000

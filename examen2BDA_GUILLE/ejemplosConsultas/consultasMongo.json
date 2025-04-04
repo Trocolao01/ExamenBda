@@ -1,0 +1,150 @@
+-- Consultas avanzadas de MongoDB
+
+-- 1. Encontrar documentos con un campo anidado específico
+  db.empleados.find({ "direccion.ciudad": "Madrid" });
+
+-- 2. Obtener el número total de empleados en cada departamento
+  db.empleados.aggregate([
+    { $group: { _id: "$departamento", total_empleados: { $sum: 1 } } }
+  ]);
+
+-- 3. Encontrar empleados con un salario mayor al salario promedio
+  db.empleados.aggregate([
+    { $group: { _id: null, salario_promedio: { $avg: "$salario" } } },
+    { $lookup: {
+        from: "empleados",
+        pipeline: [
+          { $match: { salario: { $gt: "$$salario_promedio" } } }
+        ],
+        as: "empleados_superiores"
+      }
+    }
+  ]);
+
+-- 4. Insertar un nuevo empleado con múltiples proyectos
+  db.empleados.insertOne({
+    nombre: "Carlos",
+    departamento: "IT",
+    salario: 4500,
+    proyectos: [
+      { proyecto_id: 1, nombre: "Proyecto A" },
+      { proyecto_id: 3, nombre: "Proyecto C" }
+    ]
+  });
+
+-- 5. Actualizar el salario de empleados en el departamento de "Ventas"
+  db.empleados.updateMany(
+    { departamento: "Ventas" },
+    { $inc: { salario: 500 } }
+  );
+
+-- 6. Eliminar empleados con salario menor a 2000
+  db.empleados.deleteMany({ salario: { $lt: 2000 } });
+
+-- 7. Mostrar empleados y su total de proyectos
+  db.empleados.aggregate([
+    { $project: {
+        nombre: 1,
+        total_proyectos: { $size: "$proyectos" }
+      }
+    }
+  ]);
+
+-- 8. Ordenar empleados por salario de mayor a menor
+  db.empleados.find().sort({ salario: -1 });
+
+-- 9. Encontrar el proyecto con más empleados asignados
+  db.proyectos.aggregate([
+    { $lookup: {
+        from: "empleados",
+        localField: "proyecto_id",
+        foreignField: "proyectos.proyecto_id",
+        as: "empleados_asignados"
+      }
+    },
+    { $project: {
+        nombre: 1,
+        total_empleados: { $size: "$empleados_asignados" }
+      }
+    },
+    { $sort: { total_empleados: -1 } },
+    { $limit: 1 }
+  ]);
+
+-- 10. Crear un índice en el campo "nombre" para búsquedas más rápidas
+  db.empleados.createIndex({ nombre: 1 });
+
+-- 11. Buscar empleados que compartan la misma fecha de contratación
+  db.empleados.aggregate([
+    { $group: {
+        _id: "$fecha_contratacion",
+        empleados: { $push: "$nombre" },
+        total: { $sum: 1 }
+      }
+    },
+    { $match: { total: { $gt: 1 } } }
+  ]);
+
+-- 12. Mostrar el salario promedio por departamento
+  db.empleados.aggregate([
+    { $group: { _id: "$departamento", salario_promedio: { $avg: "$salario" } } }
+  ]);
+
+-- 13. Contar los proyectos activos en el último año
+  db.proyectos.aggregate([
+    { $match: { fecha_inicio: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) } } },
+    { $count: "total_proyectos_activos" }
+  ]);
+
+-- 14. Encontrar empleados con habilidades específicas
+  db.empleados.find({ "habilidades.nombre": { $in: ["JavaScript", "Python"] } });
+
+-- 15. Obtener el empleado con el salario más alto por departamento
+  db.empleados.aggregate([
+    { $sort: { salario: -1 } },
+    { $group: { _id: "$departamento", empleado: { $first: "$nombre" }, salario: { $first: "$salario" } } }
+  ]);
+
+-- 16. Mostrar empleados que no tienen asignación de proyecto
+  db.empleados.find({ proyectos: { $exists: true, $size: 0 } });
+
+-- 17. Encontrar departamentos donde todos los empleados ganan más de 3000
+  db.empleados.aggregate([
+    { $group: { _id: "$departamento", salario_min: { $min: "$salario" } } },
+    { $match: { salario_min: { $gt: 3000 } } }
+  ]);
+
+-- 18. Mostrar empleados y sus proyectos ordenados por la duración del proyecto
+  db.empleados.aggregate([
+    { $lookup: {
+        from: "proyectos",
+        localField: "proyectos.proyecto_id",
+        foreignField: "proyecto_id",
+        as: "detalles_proyectos"
+      }
+    },
+    { $unwind: "$detalles_proyectos" },
+    { $project: {
+        nombre: 1,
+        "detalles_proyectos.nombre": 1,
+        duracion: { $subtract: ["$detalles_proyectos.fecha_fin", "$detalles_proyectos.fecha_inicio"] }
+      }
+    },
+    { $sort: { duracion: -1 } }
+  ]);
+
+-- 19. Insertar un nuevo registro solo si no existe un documento duplicado
+  db.empleados.updateOne(
+    { nombre: "Luis" },
+    { $setOnInsert: { nombre: "Luis", departamento: "Finanzas", salario: 5000 } },
+    { upsert: true }
+  );
+
+-- 20. Obtener el historial de cambios de departamento por empleado
+  db.historial_departamentos.aggregate([
+    { $group: {
+        _id: "$empleado_id",
+        cambios_departamento: { $push: "$departamento" }
+      }
+    }
+  ]);

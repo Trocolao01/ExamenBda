@@ -1,0 +1,36 @@
+# Comando: hdfs dfs -ls /ruta
+# Descripción: Lista los archivos y directorios en la ruta especificada.
+hdfs dfs -ls /ruta
+
+# Comando: hdfs dfs -mkdir /ruta/nuevo_directorio
+# Descripción: Crea un nuevo directorio en la ruta especificada.
+hdfs dfs -mkdir /ruta/nuevo_directorio
+
+# Comando: hdfs dfs -put archivo_local /ruta
+# Descripción: Copia un archivo desde el sistema de archivos local a HDFS.
+hdfs dfs -put archivo_local /ruta
+
+# Comando: hdfs dfs -get /ruta/archivo_hdfs archivo_local
+# Descripción: Copia un archivo desde HDFS al sistema de archivos local.
+hdfs dfs -get /ruta/archivo_hdfs archivo_local
+
+# Comando: hdfs dfs -cat /ruta/archivo
+# Descripción: Muestra el contenido de un archivo en HDFS.
+hdfs dfs -cat /ruta/archivo
+
+# Comando: hdfs dfs -rm /ruta/archivo
+# Descripción: Elimina un archivo en HDFS.
+hdfs dfs -rm /ruta/archivo
+
+# Comando: hdfs dfs -rmdir /ruta/directorio
+# Descripción: Elimina un directorio vacío en HDFS.
+hdfs dfs -rmdir /ruta/directorio
+
+
+# Comando: docker cp /ruta/archivo_local contenedor:/ruta_destino
+# Descripción: Copia un archivo desde el sistema de archivos local al contenedor Docker.
+docker cp /c:/Users/Vespertino/Desktop/archivo_local contenedor:/ruta_destino
+
+# Comando: hdfs dfs -put /ruta_destino/archivo_local /ruta_hdfs
+# Descripción: Copia un archivo desde el contenedor Docker a HDFS.
+hdfs dfs -put /ruta_destino/archivo_local /ruta_hdfs

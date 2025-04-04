@@ -1,0 +1,43 @@
+# ¿Existe alguna correlación entre la ubicación de la tienda y el rendimiento de las ventas?
+df_sales_stores.groupBy("location") \
+    .agg(sum("quantity").alias("total_quantity_sold")) \
+    .orderBy(desc("total_quantity_sold")) \
+    .show(5)
+
+# ¿Cómo varía el rendimiento de las ventas entre los distintos grupos demográficos?
+df_sales_stores.groupBy("demographics") \
+    .agg(F.sum("revenue").alias("total_revenue")) \
+    .orderBy(F.desc("total_revenue")) \
+    .show(5)
+
+# ¿Existen productos específicos preferidos por determinados grupos demográficos?
+df_sales_stores.groupBy("demographics", "product_id") \
+    .agg(F.sum("quantity").alias("total_quantity_sold")) \
+    .orderBy("demographics", F.desc("total_quantity_sold")) \
+    .show(5)
+
+# ¿Cómo varía el rendimiento de las ventas a lo largo del tiempo (diariamente, semanalmente, mensualmente)?
+df_sales_stores.groupBy("date") \
+    .agg(F.sum("revenue").alias("total_revenue")) \
+    .orderBy("date") \
+    .show(5)
+
+df_sales_stores.groupBy(F.date_format("date", "yyyy-MM").alias("month")) \
+    .agg(F.sum("revenue").alias("total_revenue")) \
+    .orderBy("month") \
+    .show(5)
+
+df_sales_stores.groupBy(F.date_format("date", "yyyy-ww").alias("week")) \
+    .agg(F.sum("revenue").alias("total_revenue")) \
+    .orderBy("week") \
+    .show(5)
+
+# ¿Existen tendencias estacionales en las ventas?
+df_sales_stores.groupBy(F.date_format("date", "yyyy-MM")).agg(F.sum("revenue").alias("total_revenue")).show(12)
+
+
+df_csv.count()
+
+    .mode("overwrite") \
+	.mode("append") \
+	.mode("ignore") \

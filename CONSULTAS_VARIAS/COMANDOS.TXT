@@ -1,0 +1,62 @@
+docker run -d \
+  --name mysql-container \
+  -e MYSQL_ROOT_PASSWORD=rootpass \
+  -e MYSQL_DATABASE=mydb \
+  -e MYSQL_USER=myuser \
+  -e MYSQL_PASSWORD=mypassword \
+  -p 3306:3306 \
+  mysql:8
+
+docker run -d \
+  --name mongodb-container \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=adminpass \
+  -p 27017:27017 \
+  mongo:6
+
+docker run -d \
+  --name mongodb-container \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=adminpass \
+  -e MONGO_INITDB_DATABASE=mydatabase \
+  -p 27017:27017 \
+  mongo:6
+docker run -d \
+  --name neo4j-container \
+  -e NEO4J_AUTH=neo4j/testpass \
+  -p 7474:7474 -p 7687:7687 \
+  neo4j:5
+
+BUCKETS
+
+📦 Crear un bucket
+
+awslocal s3api create-bucket --bucket mi-bucket
+
+📄 Listar buckets
+
+awslocal s3api list-buckets
+
+⬆️ Subir archivo al bucket
+
+awslocal s3 cp archivo.txt s3://mi-bucket/archivo.txt
+
+📥 Descargar archivo del bucket
+
+awslocal s3 cp s3://mi-bucket/archivo.txt archivo_local.txt
+
+🗃️ Listar archivos dentro del bucket
+
+awslocal s3 ls s3://mi-bucket
+
+❌ Borrar archivo
+
+awslocal s3 rm s3://mi-bucket/archivo.txt
+
+🧹 Eliminar bucket (vacío)
+
+awslocal s3api delete-bucket --bucket mi-bucket
+
+💡 Tip: Si el bucket tiene archivos, elimínalos primero o usa --force con rm:
+
+awslocal s3 rm s3://mi-bucket --recursive
